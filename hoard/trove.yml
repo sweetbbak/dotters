@@ -1,0 +1,69 @@
+---
+version: 1.3.0
+commands:
+  - name: find_files
+    namespace: All
+    tags:
+      - ls
+      - list
+      - find
+      - ""
+    command: "find ./ -printf \"%f\\n\""
+    description: prints files and folders recursively from current directory
+  - name: icat_images
+    namespace: Kitty
+    tags:
+      - icat
+      - kitty
+      - images
+      - place
+      - resize
+    command: "icat --place 10x30@0x0 #picture && icat --place 10x30@10x0"
+    description: "use icat to display an image in the terminal, the --place flag allows you to place the image exactly where you would like. you can also use curl and pipe | it into icat... or use && to display two images side by side or in a cloumn or row."
+  - name: curl_icat
+    namespace: curl
+    tags:
+      - curl
+      - icat
+      - magick
+      - image
+      - terminal
+    command: "curl -sL https://christitus.com/images/navlogo.png | convert -resize $((COLUMNS - 2))x - - | icat"
+    description: "curl an image from the web, convert its size with image magick based on terminal columns size and send it to icat to display the image in the terminal"
+  - name: curl_reddit_api
+    namespace: "jq -r '.data.children | map(.data.display_name) | .[]'"
+    tags:
+      - curl
+      - jq
+      - ""
+    command: "curl -sL \"https://www.reddit.com/subreddits/search.json?q=QUERY\" | jq -r '.data.children | map(.data.display_name) | .[]'"
+    description: "curls reddit api, returns json and parses json with jq to give you all the subreddits in a search"
+  - name: curl_xml_XPATH
+    namespace: curl
+    tags:
+      - curl
+      - xml
+      - html
+      - xpath
+      - sed
+      - reddit
+    command: "curl -sL \"https://www.reddit.com/search/?q=QUERY&type=sr\" | xmllint --html --xpath '//h6[@class=\"_2torGbn_fNOMbGw3UAasPl\"]/text()' - 2>/dev/null | sed 's@^r/@@'"
+    description: "curls reddit for search query, pipes it to xmllint which selects an XPATH and pipes it to sed to clean it up"
+  - name: LowerCase
+    namespace: sed
+    tags:
+      - sed
+      - string
+      - pipe
+      - text
+    command: "sed -e 's/\\(.*\\)/\\L\\1/'"
+    description: transforms string to lower case
+  - name: print_WM
+    namespace: misc
+    tags:
+      - xprop
+      - WM
+      - kwin
+      - utility
+    command: "xprop -id $(xprop -root -notype | awk '$1==\"_NET_SUPPORTING_WM_CHECK:\"{print $5}') -notype -f _NET_WM_NAME 8t | grep \"WM_NAME\" | cut -f2 -d \\\")"
+    description: uses xprop to to print the window manager name
